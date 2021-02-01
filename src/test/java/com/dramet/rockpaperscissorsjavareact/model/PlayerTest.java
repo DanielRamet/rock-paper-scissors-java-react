@@ -41,22 +41,37 @@ public class PlayerTest {
 		final GameItem item2 = new GameItem(RandomString.make(), EGameValue.ROCK);
 		
 		//Case 1: both moves Null
-		EPlayResult victim = player1.playAgainst(player2);
-		assertEquals(victim, EPlayResult.DRAW);
+		EPlayResult result = player1.playAgainst(player2);
+		assertEquals(result, EPlayResult.DRAW);
 		
 		//Case 2: both equals
 		player1.setMove(item1);
 		player2.setMove(item1);
-		victim = player1.playAgainst(player2);
-		assertEquals(victim, EPlayResult.DRAW);
+		result = player1.playAgainst(player2);
+		assertEquals(result, EPlayResult.DRAW);
 		
 		//Case 3: player1 wins
 		player1.setMove(item1);
 		player2.setMove(item2);
-		victim = player1.playAgainst(player2);
-		assertEquals(victim, EPlayResult.WIN);
+		result = player1.playAgainst(player2);
+		assertEquals(result, EPlayResult.WIN);
 		
-		victim = player2.playAgainst(player1);
-		assertEquals(victim, EPlayResult.LOSE);
+		result = player2.playAgainst(player1);
+		assertEquals(result, EPlayResult.LOSE);
+		
+		player1.setMove(null);
+		player2.setMove(item1);
+		result = player1.playAgainst(player2);
+		assertEquals(result, EPlayResult.LOSE);
+		
+		player1.setMove(item1);
+		player2.setMove(null);
+		result = player1.playAgainst(player2);
+		assertEquals(result, EPlayResult.WIN);
+		
+		player1.setMove(null);
+		player2.setMove(null);
+		result = player1.playAgainst(player2);
+		assertEquals(result, EPlayResult.DRAW);
 	}
 }

@@ -38,7 +38,7 @@ class GameComponent1 extends React.Component {
 
     render(){
         return(
-            <div>
+            <div id="content">
                 <h3> GAME (first part): </h3>
                 <button onClick={this.playRound}>Play Round</button>
                 <br/>

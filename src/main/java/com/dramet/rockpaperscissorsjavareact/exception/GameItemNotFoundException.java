@@ -1,5 +1,14 @@
 package com.dramet.rockpaperscissorsjavareact.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+/**
+ * Exception to handle when an item is not found.
+ * @author dramet
+ *
+ */
+@ResponseStatus(value = HttpStatus.NOT_FOUND, reason="Item Not Found")
 public class GameItemNotFoundException extends Exception {
 
 	/**

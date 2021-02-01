@@ -45,16 +45,16 @@ public class Game implements Serializable {
 		return totalDraws;
 	}
 
-	public Player getPlayer1() {
+	public int getTotalRoundsPlayed() {
+		return this.totalWinsPlayer1 + this.totalWinsPlayer2 + this.totalDraws;
+	}
+	
+	protected Player getPlayer1() {
 		return player1;
 	}
 
-	public Player getPlayer2() {
+	protected Player getPlayer2() {
 		return player2;
-	}
-
-	public int getTotalRoundsPlayed() {
-		return this.totalWinsPlayer1 + this.totalWinsPlayer2 + this.totalDraws;
 	}
 	
 	/**

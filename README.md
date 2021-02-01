@@ -7,14 +7,14 @@ First Part: A web view where two players will play rounds (button) and view the 
 
 Second Part: Provide a resume of the total games played either it is the first part calculation or any other view (browser). Do not use database to store data, keep in memory
 
-## Installation
+## Installation && Test execution
 
 To install use the following commands: 
 
 Project root directory: 
 
 ```
-mvn clea install
+mvn clean install
 ```
 
 ```
@@ -29,9 +29,6 @@ Go to {project-root}/src/main/react-ui
 npm start
 ```
 
-## Test execution
-
-
 ## Analysis & Operations
 
 The following domain model diagram reproduces the requirements given:
@@ -41,10 +38,20 @@ The following domain model diagram reproduces the requirements given:
 ###The API operations are the following (for 'dev' purposes, using http://localhost:8080):
 
 #####GET http://localhost:8080/api/game/all-items. 
-Obtain all Items available (i.e: Rock, Paper, Siccssors) elegible by a player.
+Obtain all Items available (i.e: Rock, Paper, Scissors) eligible by a player.
 
-#####POST http://localhost:8080/api/game/play-round/player1/{player1Choice}/player2/{player2Choice}. 
-If the choices are correct (belong to items available), then updates the Game Results (total rounds played) and returns the result of the round played (Choices and which player wins, or draw).
+#####POST http://localhost:8080/api/game/play-round. 
+The operation accept a JSON object with the following structure example:
+
+```
+{
+	player1Choice: 'PAPER',
+	player2Choice: 'ROCK'
+	
+}
+```
+
+If the choices are correct (belong to items available), then updates the Game Results (total rounds played and total wins per player and draw). As a response, it returns the result of the round played (Choices and which player wins, or draw).
 
 #####GET http://localhost:8080/api/game/resume. 
 Obtain the resume of the games played during the life-cycle of the serve side (Total wins of player 1, Total wins of player 2, Total draws, Total games played).

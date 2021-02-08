@@ -2,11 +2,20 @@ package com.dramet.rockpaperscissorsjavareact.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 
 import com.dramet.rockpaperscissorsjavareact.exception.GameItemNotFoundException;
 import com.dramet.rockpaperscissorsjavareact.factory.GameItemFactory;
@@ -16,118 +25,105 @@ import com.dramet.rockpaperscissorsjavareact.model.GameItem;
 import com.dramet.rockpaperscissorsjavareact.model.RoundResult;
 import com.dramet.rockpaperscissorsjavareact.service.impl.GameServiceImpl;
 
+import net.bytebuddy.utility.RandomString;
+
 @SpringBootTest
 public class GameServiceImplTest {
+	
+	@TestConfiguration
+	static class GameServiceImplConfigurationTest{
+		@Bean
+		public GameServiceImpl gameService() {
+			return new GameServiceImpl();
+		}		
+	}
+	
+	@Autowired
+	private GameServiceImpl gameService;
 
-	private GameServiceImpl victim;
-
+	@MockBean
+	private Game game;
+	@MockBean
+	private ReentrantLock lock;
+	@MockBean
+	private GameItemFactory gameItemFactory;
+	
+	private List<GameItem> expected;
+	
 	@BeforeEach
 	public void setup() {
-		victim = new GameServiceImpl();
+		expected = new ArrayList<GameItem>();
+		expected.add(new GameItem("label", EGameValue.ROCK));
+		expected.add(new GameItem("label", EGameValue.PAPER));
+		expected.add(new GameItem("label", EGameValue.SCISSORS));
+		Mockito.when(gameItemFactory.getGameItems()).thenReturn(expected);
 	}
 	
 	@Test
 	public void getAllItemsTest() {
-		assertEquals(GameItemFactory.getGameItems(), victim.getAllItems());
+		assertEquals(expected, gameService.getAllItems());
 	}
 	
 	@Test
-	public void getItemTest() {
-		try {
-			victim.getItem(null);
-		}catch(GameItemNotFoundException e) {
-			assertTrue(true);
-		}
+	public void getItemTest() throws GameItemNotFoundException {
+		GameItem item = gameService.getItem(EGameValue.PAPER.name());
+		assertNotNull(item);
+		assertEquals(item.getValue(), EGameValue.PAPER);
 		
-		try {
-			victim.getItem("Invalid");
-		}catch(GameItemNotFoundException e) {
-			assertTrue(true);
-		}		
+		item = gameService.getItem(EGameValue.SCISSORS.name());
+		assertNotNull(item);
+		assertEquals(item.getValue(), EGameValue.SCISSORS);
 		
-		try {
-			final GameItem item = victim.getItem(EGameValue.PAPER.name());
-			assertNotNull(item);
-			assertEquals(item.getValue(), EGameValue.PAPER);
-		} catch (GameItemNotFoundException e) {
-			assertTrue(false);
-		}
-		
-		try {
-			final GameItem item = victim.getItem(EGameValue.SCISSORS.name());
-			assertNotNull(item);
-			assertEquals(item.getValue(), EGameValue.SCISSORS);
-		} catch (GameItemNotFoundException e) {
-			assertTrue(false);
-		}
-		
-		try {
-			final GameItem item = victim.getItem(EGameValue.ROCK.name());
-			assertNotNull(item);
-			assertEquals(item.getValue(), EGameValue.ROCK);
-		} catch (GameItemNotFoundException e) {
-			assertTrue(false);
-		}
+		item = gameService.getItem(EGameValue.ROCK.name());
+		assertNotNull(item);
+		assertEquals(item.getValue(), EGameValue.ROCK);
+	}
+	
+	@Test
+	public void getItemTest_ThrowException() {
+		assertThrows(GameItemNotFoundException.class, () -> { gameService.getItem(null);});
+		assertThrows(GameItemNotFoundException.class, () -> { gameService.getItem("Invalid");});
+		assertThrows(GameItemNotFoundException.class, () -> { gameService.getItem("");});
 	}
 	
 	@Test
 	public void playRoundTest() throws GameItemNotFoundException {
-		String expectedLabel1 = "Player 2 Wins"; 
-		String expectedLabel2 = "Player 1 Wins";
-		String expectedLabel3 = "It is a Draw";
-		GameItem item1 = victim.getItem(EGameValue.ROCK.name());
-		GameItem item2 = victim.getItem(EGameValue.PAPER.name());
 		
-		RoundResult result = victim.playRound(item1, item2);
-		assertNotNull(result);
-		assertEquals(result.getPlayer1Choice(), item1.getLabel());
-		assertEquals(result.getPlayer2Choice(), item2.getLabel());
-		assertEquals(result.getResult(), expectedLabel1);
+		GameItem item1 = new GameItem(EGameValue.ROCK.name(), EGameValue.ROCK);
+		GameItem item2 = new GameItem(EGameValue.PAPER.name(), EGameValue.PAPER);
 		
-		result = victim.playRound(item2, item1);
-		assertNotNull(result);
-		assertEquals(result.getPlayer1Choice(), item2.getLabel());
-		assertEquals(result.getPlayer2Choice(), item1.getLabel());
-		assertEquals(result.getResult(), expectedLabel2);
+		RoundResult expected = new RoundResult();
+		expected.setPlayer1Choice(item1.getLabel());
+		expected.setPlayer2Choice(item2.getLabel());
+		expected.setResult(RandomString.make());
 		
-		result = victim.playRound(item1, item1);
-		assertNotNull(result);
-		assertEquals(result.getPlayer1Choice(), item1.getLabel());
-		assertEquals(result.getPlayer2Choice(), item1.getLabel());
-		assertEquals(result.getResult(), expectedLabel3);
+		Mockito.when(this.game.playRound(item1, item2)).thenReturn(expected);
 		
-		result = victim.playRound(item2, item2);
+		RoundResult result = gameService.playRound(item1.getValue().name(), item2.getValue().name());
 		assertNotNull(result);
-		assertEquals(result.getPlayer1Choice(), item2.getLabel());
-		assertEquals(result.getPlayer2Choice(), item2.getLabel());
-		assertEquals(result.getResult(), expectedLabel3);
+		assertEquals(expected.getPlayer1Choice(), result.getPlayer1Choice());
+		assertEquals(expected.getPlayer2Choice(), result.getPlayer2Choice());
+		assertEquals(expected.getResult(), result.getResult());
+		
 	}
 	
 	@Test
-	public void getGameResultTest() throws GameItemNotFoundException {
-		Game results = victim.getTotalResults();
+	public void playRound_ThrowGameItemotFound() {
+		assertThrows(GameItemNotFoundException.class, () -> { gameService.playRound(null, null);});
+		assertThrows(GameItemNotFoundException.class, () -> { gameService.playRound("", EGameValue.SCISSORS.name());});
+		assertThrows(GameItemNotFoundException.class, () -> { gameService.playRound(EGameValue.SCISSORS.name(), "");});
+		assertThrows(GameItemNotFoundException.class, () -> { gameService.playRound("", "");});
+		assertThrows(GameItemNotFoundException.class, () -> { gameService.playRound("Invalid", EGameValue.PAPER.name());});
+		assertThrows(GameItemNotFoundException.class, () -> { gameService.playRound(EGameValue.PAPER.name(), "Invalid");});
+	}
+	
+	@Test
+	public void getGameResultTest() {
+		Game results = gameService.getTotalResults();
 		assertNotNull(results);
 		assertEquals(results.getTotalRoundsPlayed(), 0);
 		assertEquals(results.getTotalDraws(), 0);
 		assertEquals(results.getTotalWinsPlayer1(), 0);
 		assertEquals(results.getTotalWinsPlayer2(), 0);
-		
-		GameItem item1 = victim.getItem(EGameValue.ROCK.name());
-		GameItem item2 = victim.getItem(EGameValue.PAPER.name());
-		GameItem item3 = victim.getItem(EGameValue.SCISSORS.name());
-		
-		victim.playRound(item1, item2);
-		victim.playRound(item2, item3);
-		victim.playRound(item3, item1);
-		victim.playRound(item1, item1);
-		victim.playRound(item2, item2);
-		victim.playRound(item3, item3);
-		
-		results = victim.getTotalResults();
-		assertNotNull(results);
-		assertEquals(results.getTotalRoundsPlayed(), 6);
-		assertEquals(results.getTotalDraws(), 3);
-		assertEquals(results.getTotalWinsPlayer1(), 0);
-		assertEquals(results.getTotalWinsPlayer2(), 3);
 	}
 }

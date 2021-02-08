@@ -17,7 +17,7 @@ class GameService{
             player1Choice: player1, 
             player2Choice: player2
         };
-        return axios.post(GAME_REST_API_URL + "/play-round", request);
+        return axios.post(GAME_REST_API_URL + "/round", request);
     }
 }
 

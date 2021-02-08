@@ -17,6 +17,8 @@ public class Game implements Serializable {
 	private static final String DRAW_LABEL = "It is a Draw";
 	private static final String WIN_SUFFIX = " Wins";
 	
+	//private Long version;
+	
 	private int totalWinsPlayer1;
 	private int totalWinsPlayer2;
 	private int totalDraws;
@@ -32,7 +34,7 @@ public class Game implements Serializable {
 		this.player1 = new Player(Player.DEFAULT_PLAYER1_NAME);
 		this.player2 = new Player(Player.DEFAULT_PLAYER2_NAME);
 	}
-
+	
 	public int getTotalWinsPlayer1() {
 		return totalWinsPlayer1;
 	}

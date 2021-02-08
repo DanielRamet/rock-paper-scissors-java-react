@@ -4,17 +4,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import net.bytebuddy.utility.RandomString;
 
-@SpringBootTest
 public class RoundResultTest {
 
+	private RoundResult victim;
+	
+	@BeforeEach
+	public void setup() {
+		victim = new RoundResult();
+	}
+	
 	@Test
 	public void roundResult_test() {
-		final RoundResult victim = new RoundResult();
 		assertNull(victim.getPlayer1Choice());
 		assertNull(victim.getPlayer2Choice());
 		assertNull(victim.getResult());

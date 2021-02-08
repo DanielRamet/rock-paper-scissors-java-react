@@ -1,13 +1,30 @@
-# Code Challenge - Ciklum: Rock, Paper, Scissors (rock-paper-scissors-java-react)
+#Code Challenge: Rock, Paper, Scissors (rock-paper-scissors-java-react)
 
-This project is a web app that simulates the game Rock, Paper, Scissors using Java + React. 
+##Table of Contents
+- [Introduction](#introduction)
+- [Technologies used](#technologies-used)
+- [Launch](#launch)
+- [Analysis](#analysis)
+- [Operations](#operations)
+
+# Introduction
+This project is a web based application that simulates the game Rock, Paper, Scissors using Java + React. 
 The aim consist on two parts.
 
 First Part: A web view where two players will play rounds (button) and view the list of rounds played and the number of those rounds. The player 1 will choose randomly one of the choices and the player 2 will choose always Rock option.
 
 Second Part: Provide a resume of the total games played either it is the first part calculation or any other view (browser). Do not use database to store data, keep in memory
 
-## Installation && Test execution
+
+# Technologies used
+
+* Java 8
+* Spring boot 2.4.2
+* Spring context 5.3.3
+* JUnit 5.7.0
+* React JS
+
+# Launch
 
 To install use the following commands: 
 
@@ -29,18 +46,22 @@ Go to {project-root}/src/main/react-ui
 npm start
 ```
 
-## Analysis & Operations
+# Analysis
 
 The following domain model diagram reproduces the requirements given:
 
 {project-directory}/src/main/resources/domain.jpg
+
+![alt text](https://github.com/DanielRamet/rock-paper-scissors-java-react/blob/main/src/main/resources/domain.jpg?raw=true)
+
+# Operations
 
 ###The API operations are the following (for 'dev' purposes, using http://localhost:8080):
 
 #####GET http://localhost:8080/api/game/all-items. 
 Obtain all Items available (i.e: Rock, Paper, Scissors) eligible by a player.
 
-#####POST http://localhost:8080/api/game/play-round. 
+#####POST http://localhost:8080/api/game/round. 
 The operation accept a JSON object with the following structure example:
 
 ```

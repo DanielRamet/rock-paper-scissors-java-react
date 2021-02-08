@@ -25,8 +25,8 @@ import com.dramet.rockpaperscissorsjavareact.model.request.RoundRequest;
 
 @SpringBootTest(classes = RockPaperScissorsJavaReactApplication.class, 
 webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class GameControllerTest {
-
+public class GameControllerIntegrationTest {
+	
 	@LocalServerPort
 	private int port;
 	
@@ -53,21 +53,21 @@ public class GameControllerTest {
 	    request.setPlayer1Choice(EGameValue.PAPER.name());
 	    request.setPlayer2Choice(EGameValue.ROCK.name());
 	    
-	    ResponseEntity<RoundResult> response = restTemplate.postForEntity("/api/game/play-round", request, RoundResult.class);
+	    ResponseEntity<RoundResult> response = restTemplate.postForEntity("/api/game/round", request, RoundResult.class);
 	    assertNotNull(response);
 	    assertNotNull(response.getBody());
 	    assertEquals(response.getBody().getPlayer1Choice(), "Paper");
 	    assertEquals(response.getBody().getPlayer2Choice(), "Rock");
 	    assertEquals(response.getBody().getResult(), "Player 1 Wins");
 	    
-	    ResponseEntity<RoundResult> roundResult = restTemplate.postForEntity("/api/game/play-round", request, RoundResult.class);
+	    ResponseEntity<RoundResult> roundResult = restTemplate.postForEntity("/api/game/round", request, RoundResult.class);
 	    assertNotNull(roundResult);
 	    assertEquals(roundResult.getStatusCode(), HttpStatus.OK);
 	    
 	    request = new RoundRequest();
 	    request.setPlayer1Choice(EGameValue.ROCK.name());
 	    request.setPlayer2Choice(EGameValue.ROCK.name());
-	    roundResult = restTemplate.postForEntity("/api/game/play-round", request, RoundResult.class);
+	    roundResult = restTemplate.postForEntity("/api/game/round", request, RoundResult.class);
 	    assertNotNull(roundResult);
 	    assertEquals(roundResult.getStatusCode(), HttpStatus.OK);
 	    
@@ -88,7 +88,7 @@ public class GameControllerTest {
 	    request.setPlayer1Choice("Invalid");
 	    request.setPlayer2Choice(EGameValue.ROCK.name());
 	    
-	    ResponseEntity<RoundResult> response = restTemplate.postForEntity("/api/game/play-round", request, RoundResult.class);
+	    ResponseEntity<RoundResult> response = restTemplate.postForEntity("/api/game/round", request, RoundResult.class);
 	    assertNotNull(response);
 	    assertNotNull(response.getBody());
 	    assertNotNull(response.getStatusCode().compareTo(HttpStatus.NOT_FOUND));
@@ -96,7 +96,7 @@ public class GameControllerTest {
 	    request.setPlayer2Choice("Invalid");
 	    request.setPlayer1Choice(EGameValue.ROCK.name());
 	    
-	    response = restTemplate.postForEntity("/api/game/play-round", request, RoundResult.class);
+	    response = restTemplate.postForEntity("/api/game/round", request, RoundResult.class);
 	    assertNotNull(response);
 	    assertNotNull(response.getBody());
 	    assertNotNull(response.getStatusCode().compareTo(HttpStatus.NOT_FOUND));

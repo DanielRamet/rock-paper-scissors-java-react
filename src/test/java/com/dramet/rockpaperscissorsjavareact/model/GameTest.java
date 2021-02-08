@@ -5,18 +5,22 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import net.bytebuddy.utility.RandomString;
 
-@SpringBootTest
 public class GameTest {
 
+	private Game game;
+	
+	@BeforeEach
+	public void setup() {
+		this.game = new Game();
+	}
 	
 	@Test
 	public void createGameTest() {
-		final Game game = new Game();
 		assertNotNull(game);
 		assertNotNull(game.getPlayer1());
 		assertNotNull(game.getPlayer2());
@@ -31,7 +35,6 @@ public class GameTest {
 	
 	@Test
 	public void playRound_RoundResult_Test() {
-		final Game game = new Game();
 		final GameItem item1 = new GameItem(RandomString.make(), EGameValue.ROCK);
 		final GameItem item2 = new GameItem(RandomString.make(), EGameValue.PAPER);
 		final GameItem item3 = new GameItem(RandomString.make(), EGameValue.SCISSORS);
@@ -61,7 +64,6 @@ public class GameTest {
 	
 	@Test
 	public void playRound_TotalDraws_Test() {
-		final Game game = new Game();
 		final GameItem item1 = new GameItem(RandomString.make(), EGameValue.ROCK);
 		final GameItem item2 = new GameItem(RandomString.make(), EGameValue.PAPER);
 		final GameItem item3 = new GameItem(RandomString.make(), EGameValue.SCISSORS);
@@ -78,7 +80,6 @@ public class GameTest {
 	
 	@Test
 	public void playRound_TotalWinsPlayer1_Test() {
-		final Game game = new Game();
 		final GameItem item1 = new GameItem(RandomString.make(), EGameValue.ROCK);
 		final GameItem item2 = new GameItem(RandomString.make(), EGameValue.PAPER);
 		final GameItem item3 = new GameItem(RandomString.make(), EGameValue.SCISSORS);
@@ -93,7 +94,6 @@ public class GameTest {
 	
 	@Test
 	public void playRound_TotalWinsPlayer2_Test() {
-		final Game game = new Game();
 		final GameItem item1 = new GameItem(RandomString.make(), EGameValue.ROCK);
 		final GameItem item2 = new GameItem(RandomString.make(), EGameValue.PAPER);
 		final GameItem item3 = new GameItem(RandomString.make(), EGameValue.SCISSORS);
@@ -107,7 +107,6 @@ public class GameTest {
 	
 	@Test
 	public void playRound_TotalRounds_Test() {
-		final Game game = new Game();
 		final GameItem item1 = new GameItem(RandomString.make(), EGameValue.ROCK);
 		final GameItem item2 = new GameItem(RandomString.make(), EGameValue.PAPER);
 		final GameItem item3 = new GameItem(RandomString.make(), EGameValue.SCISSORS);

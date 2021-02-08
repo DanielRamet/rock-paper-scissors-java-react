@@ -30,12 +30,10 @@ public class GameController {
 		return gameService.getAllItems();
 	}
 	
-	@PostMapping(value = "/play-round", consumes = "application/json", produces = "application/json")
+	@PostMapping(value = "/round", consumes = "application/json", produces = "application/json")
 	public RoundResult playRound(@RequestBody RoundRequest request) 
 			throws GameItemNotFoundException {
-		GameItem item1 = gameService.getItem(request.getPlayer1Choice());
-		GameItem item2 = gameService.getItem(request.getPlayer2Choice());
-		return gameService.playRound(item1, item2);
+		return gameService.playRound(request.getPlayer1Choice(), request.getPlayer2Choice());
 	}
 	
 	@GetMapping("/resume")

@@ -25,12 +25,12 @@ class GameComponent2 extends React.Component {
     }
 
     getData() {
-        GameService.getResume().then(response => 
+        GameService.getResume().then(data => 
             this.setState({
-                totalDraws: response.data.totalDraws, 
-                totalWinsPlayer1: response.data.totalWinsPlayer1,
-                totalWinsPlayer2: response.data.totalWinsPlayer2, 
-                totalRoundsPlayed: response.data.totalRoundsPlayed}));
+                totalDraws: data.totalDraws, 
+                totalWinsPlayer1: data.totalWinsPlayer1,
+                totalWinsPlayer2: data.totalWinsPlayer2, 
+                totalRoundsPlayed: data.totalRoundsPlayed}));
     }
     render(){
         return(

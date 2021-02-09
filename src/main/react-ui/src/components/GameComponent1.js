@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import GameService from '../services/GameService';
+import BootstrapTable from 'react-bootstrap-table-next';
+import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-class GameComponent1 extends React.Component {
+class GameComponent1 extends Component {
 
     constructor(props){
         super(props);
@@ -9,15 +11,40 @@ class GameComponent1 extends React.Component {
             items: [],
             totalRounds: 0,
             roundList: [],
-            gameId: this.props.gameId
+            gameId: this.props.gameId,
+            columns: [{
+                dataField: 'id',
+                text: 'Round',
+                headerStyle: (colum, colIndex) => {
+                    return { width: '10%', textAlign: 'center' };
+                  }
+              }, {
+                dataField: 'player1Choice',
+                text: 'Player 1',
+                headerStyle: (colum, colIndex) => {
+                    return { width: '30%', textAlign: 'center' };
+                  }
+              }, {
+                dataField: 'player2Choice',
+                text: 'Player 2',
+                headerStyle: (colum, colIndex) => {
+                    return { width: '30%', textAlign: 'center' };
+                  }                
+              }, {
+                dataField: 'result',
+                text: 'Result',
+                headerStyle: (colum, colIndex) => {
+                    return { width: '30%', textAlign: 'center' };
+                  }
+              }]
         };
         this.playRound = this.playRound.bind(this);
         this.resetGame = this.resetGame.bind(this);
     }
 
     componentDidMount(){
-        GameService.getAllItems().then(response => {
-            this.setState({items: response.data})
+        GameService.getAllItems().then(data => {
+            this.setState({items: data})
         });
 
     }
@@ -26,7 +53,14 @@ class GameComponent1 extends React.Component {
         this.setState({totalRounds: this.state.totalRounds+1});
         var randomNumber = Math.floor((Math.random() * 3));
         GameService.playRoundPost(this.state.items[randomNumber].value, this.state.items[0].value).then(
-            (response) => {this.setState({roundList: this.state.roundList.concat(response.data)});}, 
+            (data) => {this.setState({roundList: this.state.roundList.concat(
+                { 
+                    id: this.state.roundList.length+1 , 
+                    player1Choice: data.player1Choice,
+                    player2Choice: data.player2Choice,
+                    result: data.result 
+                }
+                )});}, 
             (error) => {console.log(error);}
         )
     }
@@ -38,37 +72,12 @@ class GameComponent1 extends React.Component {
 
     render(){
         return(
-            <div id="content">
+            <div id="content" style={{ marginBottom: 10 }}>
                 <h3> GAME (first part): </h3>
                 <button onClick={this.playRound}>Play Round</button>
-                <br/>
                 <button onClick={this.resetGame}>Reset Game</button>
-                <p><b>TOTAL ROUNDS PLAYED:</b> {this.state.totalRounds} </p>
-                <table>
-                    <thead>
-                        <tr>
-                        <th>Round No.</th>
-                        <th>Player 1</th>
-                        <th>Player 2</th>
-                        <th>Result</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        this.state.roundList.map(
-                            (round, index) => 
-                            <React.Fragment key={index}> 
-                            <tr>
-                                <td>{index + 1}</td>
-                                <td>{round.player1Choice}</td>
-                                <td>{round.player2Choice}</td>
-                                <td>{round.result}</td>
-                            </tr>
-                            </React.Fragment>
-                        )
-                    }
-                    </tbody>
-                </table>
+                <p><b>TOTAL ROUNDS PLAYED:</b> {this.state.totalRounds} </p>                
+                <BootstrapTable striped keyField='id' data={ this.state.roundList } columns={ this.state.columns } />
             </div>
         )
     }

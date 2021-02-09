@@ -1,18 +1,38 @@
+import { Component } from 'react';
 import './App.css';
-import GameComponent1 from './components/GameComponent1';
-import GameComponent2 from './components/GameComponent2';
+import Content from './components/Content';
+import Footer from './components/Footer';
+import Header from './components/Header';
 
-function App() {
-  return (
-    <div id="container">
-      <div id="header">
-          <h2>Rock, Paper, Scissors: web demo Java+React</h2>
-          <h4>Author: Daniel Ramet (2021)</h4>
-      </div>
-        <GameComponent1 />
-        <GameComponent2 />
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render(){
+
+    const styles = {
+      white: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+      black: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+      topBarHeight: 50,
+      footerMenuHeight: 50
+    };
+
+    return (
+    <div 
+      style={{
+        backgroundColor: styles.black(0.05),
+        minHeight: "100vh",
+        position: "relative"
+      }}
+      >
+      <Header styles={styles} />
+      <Content styles={styles} />
+      <Footer styles={styles} />
     </div>
   );
+}
 }
 
 export default App;

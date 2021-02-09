@@ -1,23 +1,23 @@
-import axios from 'axios'
 
 const GAME_REST_API_URL = 'http://localhost:8080/api/game';
 
 class GameService{
 
     getAllItems(){
-        return axios.get(GAME_REST_API_URL + "/all-items");
+        return fetch(GAME_REST_API_URL + '/all-items').then(response => response.json());
     }
 
     getResume(){
-        return axios.get(GAME_REST_API_URL + "/resume");
+        return fetch(GAME_REST_API_URL + "/resume").then(response => response.json());
     }
 
     playRoundPost(player1, player2){
-        const request = {
-            player1Choice: player1, 
-            player2Choice: player2
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ player1Choice: player1, player2Choice: player2 })
         };
-        return axios.post(GAME_REST_API_URL + "/round", request);
+        return fetch(GAME_REST_API_URL + "/round", requestOptions).then(response => response.json());
     }
 }
 

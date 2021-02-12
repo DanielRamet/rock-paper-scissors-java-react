@@ -74,9 +74,9 @@ class GameComponent1 extends Component {
         return(
             <div id="content" style={{ marginBottom: 10 }}>
                 <h3> GAME (first part): </h3>
-                <button onClick={this.playRound}>Play Round</button>
-                <button onClick={this.resetGame}>Reset Game</button>
-                <p><b>TOTAL ROUNDS PLAYED:</b> {this.state.totalRounds} </p>                
+                <button id="play-round" onClick={this.playRound}>Play Round</button>
+                <button id="reset" onClick={this.resetGame}>Reset Game</button>
+                <p><b>TOTAL ROUNDS PLAYED:</b> {this.state.totalRounds}</p>                
                 <BootstrapTable striped keyField='id' data={ this.state.roundList } columns={ this.state.columns } />
             </div>
         )
